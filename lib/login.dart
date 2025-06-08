@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: "Informe o email",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(37),
-                  borderSide: BorderSide(style: BorderStyle.none),
+                  borderSide: const BorderSide(style: BorderStyle.none),
                 ),
               ),
             ),
@@ -45,14 +45,14 @@ class _LoginPageState extends State<LoginPage> {
                     });
                   },
                   icon:
-                      showPassword == false
+                      !showPassword
                           ? const Icon(Icons.visibility_off)
                           : const Icon(Icons.visibility),
                 ),
                 hintText: "Informe a senha",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(37),
-                  borderSide: BorderSide(style: BorderStyle.none),
+                  borderSide: const BorderSide(style: BorderStyle.none),
                 ),
               ),
             ),
@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                   );
                 },
                 child: const Text("Entrar"),

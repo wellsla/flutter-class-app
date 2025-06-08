@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/feriados_screen.dart';
 import 'package:flutterapp/home.dart';
 import 'package:flutterapp/login.dart';
 
@@ -22,8 +23,10 @@ class MyApp extends StatelessWidget {
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: LoginPage() 
+      home: const LoginPage(),
+      routes: {
+        '/feriados': (context) => const FeriadosScreen(),
+      },
     );
   }
 }
-

@@ -72,8 +72,16 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FormCourse()),
+                  MaterialPageRoute(builder: (context) => const FormCourse()),
                 );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_today),
+              title: const Text('Feriados'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/feriados');
               },
             ),
           ],
@@ -86,7 +94,7 @@ class _HomePageState extends State<HomePage> {
             elevation: 5,
             child: Slidable(
               endActionPane: ActionPane(
-                motion: ScrollMotion(),
+                motion: const ScrollMotion(),
                 children: [
                   SlidableAction(
                     onPressed: (context) {},
@@ -105,21 +113,21 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               child: ListTile(
-                leading: CircleAvatar(child: Text("CC")),
+                leading: const CircleAvatar(child: Text("CC")),
                 title: Text(courses[index].name ?? ''),
                 subtitle: Text(courses[index].description ?? ''),
-                trailing: Icon(Icons.arrow_forward_ios),
+                trailing: const Icon(Icons.arrow_forward_ios),
               ),
             ),
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => FormCourse()),
+            MaterialPageRoute(builder: (context) => const FormCourse()),
           );
         },
       ),
