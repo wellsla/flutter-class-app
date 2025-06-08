@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutterapp/form_course.dart';
 import 'package:flutterapp/models/course_model.dart';
+import 'package:flutterapp/repository/course_repository.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,26 +12,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<CourseModel> courses = [
-    CourseModel(
-      id: '1',
-      name: 'Curso 1',
-      description: 'curso de ads',
-      startAt: '01/01/2025',
-    ),
-    CourseModel(
-      id: '2',
-      name: 'Curso 2',
-      description: 'curso de cc',
-      startAt: '01/01/2025',
-    ),
-    CourseModel(
-      id: '3',
-      name: 'Curso 3',
-      description: 'curso de eng compt',
-      startAt: '01/01/2025',
-    ),
-  ];
+  final repository = CourseRepository();
+  late Future<List<CourseModel>> futureCourseList;
+
+  Future<List<CourseModel>> getCourses() async {
+    return await repository.getAll();
+  }
+
+  @override
+  void initState() {
+    futureCourseList = getCourses();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,50 +80,68 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: ListView.builder(
-        itemCount: courses.length,
-        itemBuilder: (context, index) {
-          return Card(
-            elevation: 5,
-            child: Slidable(
-              endActionPane: ActionPane(
-                motion: const ScrollMotion(),
-                children: [
-                  SlidableAction(
-                    onPressed: (context) {},
-                    icon: Icons.edit,
-                    backgroundColor: Colors.grey,
-                    foregroundColor: Colors.black,
-                    label: "Editar",
-                  ),
-                  SlidableAction(
-                    onPressed: (context) {},
-                    icon: Icons.delete,
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    label: "Excluir",
-                  ),
-                ],
-              ),
-              child: ListTile(
-                leading: const CircleAvatar(child: Text("CC")),
-                title: Text(courses[index].name ?? ''),
-                subtitle: Text(courses[index].description ?? ''),
-                trailing: const Icon(Icons.arrow_forward_ios),
-              ),
-            ),
-          );
+      body: FutureBuilder(
+        future: futureCourseList,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text("Nenhum curso encontrado."));
+          }
+
+          final courses = snapshot.data!;
+          return buildCourseList(courses);
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const FormCourse()),
+            MaterialPageRoute(builder: (context) => FormCourse()),
           );
         },
       ),
+    );
+  }
+
+  Widget buildCourseList(List<CourseModel> courses) {
+    return ListView.builder(
+      itemCount: courses.length,
+      itemBuilder: (context, index) {
+        return Card(
+          elevation: 5,
+          child: Slidable(
+            endActionPane: ActionPane(
+              motion: ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) {},
+                  icon: Icons.edit,
+                  backgroundColor: Colors.grey,
+                  foregroundColor: Colors.black,
+                  label: "Editar",
+                ),
+                SlidableAction(
+                  onPressed: (context) {},
+                  icon: Icons.delete,
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  label: "Excluir",
+                ),
+              ],
+            ),
+            child: ListTile(
+              leading: CircleAvatar(child: Text("CC")),
+              title: Text(courses[index].name ?? ''),
+              subtitle: Text(courses[index].description ?? ''),
+              trailing: Icon(Icons.arrow_forward_ios),
+            ),
+          ),
+        );
+      },
     );
   }
 }

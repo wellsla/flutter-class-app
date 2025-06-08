@@ -1,3 +1,10 @@
+# Main commands
+```bash
+flutter doctor
+flutter pub get
+flutter run
+```
+
 # flutterapp
 
 A new Flutter project.
