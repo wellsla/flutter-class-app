@@ -2,17 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutterapp/models/holiday_model.dart';
 import 'package:flutterapp/repository/holiday_repository.dart';
+import 'package:intl/intl.dart';
 
-class FeriadosScreen extends StatefulWidget {
-  const FeriadosScreen({super.key});
+class HolidayScreen extends StatefulWidget {
+  const HolidayScreen({super.key});
 
   @override
-  State<FeriadosScreen> createState() => _FeriadosScreenState();
+  State<HolidayScreen> createState() => _HolidayScreenState();
 }
 
-class _FeriadosScreenState extends State<FeriadosScreen> {
+class _HolidayScreenState extends State<HolidayScreen> {
   late Future<List<Holiday>> _holidaysFuture;
   final HolidayRepository _repository = HolidayRepository();
+
+  String formatDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) {
+      return 'N/A';
+    }
+
+    try {
+      final date = DateTime.parse(dateStr);
+      return DateFormat('dd/MM/yyyy').format(date);
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
+  String formatType(String? typeStr) {
+    if (typeStr == null || typeStr.isEmpty) {
+      return 'N/A';
+    }
+
+    if (typeStr == 'national') {
+      return 'Nacional';
+    }
+
+    return typeStr;
+  }
 
   @override
   void initState() {
@@ -102,8 +128,8 @@ class _FeriadosScreenState extends State<FeriadosScreen> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Data: ${holiday.date ?? 'N/A'}'),
-                          Text('Tipo: ${holiday.type ?? 'N/A'}'),
+                          Text('Data: ${formatDate(holiday.date)}'),
+                          Text('Tipo: ${formatType(holiday.type)}'),
                         ],
                       ),
                       isThreeLine: true,
